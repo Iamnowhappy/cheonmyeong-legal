@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Auth Callback</title>
+</head>
+<body style="font-family: sans-serif; max-width: 600px; margin: 60px auto; line-height: 1.7; padding: 0 20px;">
+<h1>TikTok 인증 완료</h1>
+<p>아래 코드를 복사해서 터미널에 붙여넣으세요.</p>
+<pre id="code" style="background:#f4f4f4; padding:16px; border-radius:8px; word-break:break-all; font-size:16px;"></pre>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const state = params.get("state");
+  const error = params.get("error");
+  document.getElementById("code").textContent =
+    error ? ("오류: " + error) : ("code=" + code + "\nstate=" + state);
+</script>
+</body>
+</html>
