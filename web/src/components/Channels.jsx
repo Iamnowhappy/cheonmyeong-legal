@@ -11,7 +11,7 @@ export default function Channels() {
           같은 이야기를 플랫폼에 맞는 길이와 형식으로 올립니다.
         </p>
 
-        <ul className="mt-14 grid gap-px overflow-hidden rounded-lg bg-paper/15 sm:grid-cols-2">
+        <ul className="mt-14 grid gap-px overflow-hidden rounded-lg bg-paper/15 sm:grid-cols-3">
           {CHANNELS.map((c) => {
             const inner = (
               <>
