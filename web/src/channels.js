@@ -2,7 +2,7 @@
 export const CHANNELS = [
   { name: 'Threads', format: '짧은 명리 노트와 카드뉴스', url: 'https://www.threads.com/@cheonmyeong_lab' },
   { name: 'Instagram', format: '카드뉴스와 릴스', url: 'https://www.instagram.com/cheonmyeong_lab/' },
-  { name: 'TikTok', format: '오늘의 일진 숏폼', url: '' },
+  { name: 'TikTok', format: '안내자 숏폼 영상', url: 'https://www.tiktok.com/@cheonmyeong_lab' },
 ]
 
 export const CONTACT_EMAIL = 'hssgchng@naver.com'
