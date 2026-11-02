@@ -6,3 +6,6 @@ export const CHANNELS = [
 ]
 
 export const CONTACT_EMAIL = 'hssgchng@naver.com'
+
+// 사주앱 무료 화면 — s=hp 로 홈페이지 유입을 따로 셉니다.
+export const SAJU_URL = 'https://saju-app-4c38.vercel.app/start?s=hp'

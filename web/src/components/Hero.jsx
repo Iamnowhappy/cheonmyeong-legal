@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { yearPillar } from '../ganji.js'
 import CycleRing from './CycleRing.jsx'
+import { SAJU_URL } from '../channels.js'
 
 const MIN = 1900
 const MAX = 2100
@@ -76,6 +77,11 @@ export default function Hero({ year, onYearChange }) {
               천간 {p.stem.han}({p.stem.ko})은 {p.element.ko}({p.element.han}) 기운, 지지 {p.branch.han}({p.branch.ko})는 {p.branch.animal}띠입니다.
             </p>
           </div>
+
+          <a href={SAJU_URL} target="_blank" rel="noopener"
+            className="mt-8 inline-flex items-center gap-2 rounded-md bg-ochre px-6 py-3.5 font-display text-lg text-indigo-ink transition-opacity hover:opacity-90">
+            생년월일로 내 사주 무료로 보기 <span aria-hidden="true">→</span>
+          </a>
         </div>
 
         <div className="mx-auto w-full max-w-[min(100%,560px)] px-2 sm:px-6 lg:px-0">
