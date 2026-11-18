@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>명이 일간툰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../myeongi/base.css">
+<style>
+  .stem{padding:26px 36px}
+  .stem-head{display:flex;align-items:baseline;gap:16px}
+  .stem-head b{font-family:'Jua';font-weight:400;font-size:64px;line-height:1;color:var(--el)}
+  .stem-head span{font-family:'Jua';font-size:38px;color:var(--navy)}
+  .tags{display:flex;gap:12px;margin-top:16px}
+  .tag{font-family:'Jua';font-size:28px;color:var(--el);border:3px solid var(--el);border-radius:999px;padding:4px 18px}
+  .stem .desc{font-size:33px;margin-top:14px}
+  .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+  .pillar{display:flex;flex-direction:column;gap:10px;align-items:center}
+  .pillar .cap{font-family:'Jua';font-size:28px;color:var(--sub)}
+  .cell{width:120px;height:120px;border-radius:24px;border:3px dashed var(--line);display:flex;align-items:center;justify-content:center;font-family:'Jua';font-size:44px;color:#C9BBA0}
+  .cell.me{border:4px solid var(--navy);background:var(--navy);color:#fff}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="../../myeongi/myeongi.js"></script>
+<script>
+const PAIRS = {
+  wood:{bubble:'같은 나무라도<br>성격이 달라요!', mood:'happy', stems:[
+    {h:'甲', k:'갑', img:'큰 나무', tags:['리더형','곧은 성격','추진력'],
+     desc:'한번 정하면 쭉 밀고 나가요.<br>고집이 세다는 말도 자주 들어요.'},
+    {h:'乙', k:'을', img:'풀·덩굴', tags:['유연함','적응력','사교성'],
+     desc:'어디서든 잘 어울리고 버텨요.<br>부드럽지만 생각보다 끈질겨요.'}]},
+  fire:{bubble:'둘 다 따뜻한데<br>온도가 달라요', mood:'normal', stems:[
+    {h:'丙', k:'병', img:'태양', tags:['밝음','열정','솔직함'],
+     desc:'있는 그대로 다 보여 줘요.<br>분위기를 확 띄우는 사람이에요.'},
+    {h:'丁', k:'정', img:'촛불·등불', tags:['섬세함','집중력','다정함'],
+     desc:'조용히 곁을 밝혀 줘요.<br>한 가지에 깊게 빠져드는 편이에요.'}]},
+  earth:{bubble:'든든함에도<br>종류가 있어요', mood:'normal', stems:[
+    {h:'戊', k:'무', img:'큰 산', tags:['듬직함','포용력','느긋함'],
+     desc:'쉽게 흔들리지 않는 버팀목이에요.<br>대신 움직이기까지 오래 걸려요.'},
+    {h:'己', k:'기', img:'논밭', tags:['실속','꼼꼼함','배려'],
+     desc:'사람과 일을 잘 키워 내요.<br>속으로 걱정을 많이 하는 편이에요.'}]},
+  metal:{bubble:'단단한 쇠와<br>반짝이는 보석!', mood:'surprised', stems:[
+    {h:'庚', k:'경', img:'바위·무쇠', tags:['결단력','의리','직설'],
+     desc:'맺고 끊는 게 확실해요.<br>내 사람은 끝까지 챙겨요.'},
+    {h:'辛', k:'신', img:'보석', tags:['깔끔함','예민함','자존심'],
+     desc:'감각이 좋고 완성도를 따져요.<br>상처도 그만큼 잘 받아요.'}]},
+  water:{bubble:'바다와 빗물,<br>둘 다 물이에요', mood:'happy', stems:[
+    {h:'壬', k:'임', img:'바다·큰 강', tags:['큰 그림','자유로움','지혜'],
+     desc:'생각의 크기가 커요.<br>얽매이는 걸 제일 싫어해요.'},
+    {h:'癸', k:'계', img:'비·이슬', tags:['감수성','직관','조용한 배려'],
+     desc:'말없이 스며들어 챙겨 줘요.<br>눈치가 빠르고 생각이 많아요.'}]},
+};
+
+function pairPage(key){
+  const e = EL[key], d = PAIRS[key];
+  return `<div class="page" style="--el:${e.c}">
+    <div class="kicker">내 일간으로 보는 성격</div>
+    <div class="title"><span class="acc">${e.h}(${e.k})</span> 일간 · ${d.stems[0].h} ${d.stems[1].h}</div>
+    <div class="cat" style="left:90px;top:255px">${cat({mood:d.mood, prop:key, size:320})}</div>
+    <div class="bubble left" style="left:460px;top:290px;width:520px;--ty:60%">${d.bubble}</div>
+    <div style="position:absolute;left:80px;right:80px;top:600px;display:flex;flex-direction:column;gap:22px">
+      ${d.stems.map(s=>`<div class="card stem">
+        <div class="stem-head"><b>${s.h}</b><span>${s.k} · ${s.img}</span></div>
+        <div class="tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <p class="desc">${s.desc}</p>
+      </div>`).join('')}
+    </div>
+    ${brand}
+  </div>`;
+}
+
+const PAGES = {
+  1: () => `<div class="page">
+    <div class="kicker">명이의 명리 생활 2</div>
+    <div class="title" style="font-size:96px;margin-top:30px">내 일간으로 보는<br><span class="acc" style="color:var(--gold)">진짜 내 성격</span></div>
+    <p style="text-align:center;font-size:38px;color:var(--sub);margin-top:30px">10가지 일간, 나는 어떤 사람일까?</p>
+    <div style="margin-top:56px">${chips()}</div>
+    <div class="bubble down" style="left:560px;top:760px;width:420px;--tx:22%">나는 촛불이래!<br>너는 뭐야?</div>
+    <div class="cat" style="left:130px;top:770px">${cat({mood:'happy', prop:'fire', size:450})}</div>
+    ${brand}
+  </div>`,
+  2: () => `<div class="page" style="--el:var(--navy)">
+    <div class="kicker">먼저 알아 두기</div>
+    <div class="title">일간이 뭐냐면요</div>
+    <div class="card" style="margin-top:50px;text-align:center">
+      <p style="font-size:38px;line-height:1.5">사주 여덟 글자 중<br><b style="font-family:Jua;font-weight:400;color:var(--navy)">태어난 날의 윗글자</b>가 일간이에요.</p>
+      <div class="pillars">
+        ${['시','일','월','년'].map(c=>`<div class="pillar"><span class="cap">${c}</span>
+          <div class="cell ${c==='일'?'me':''}">${c==='일'?'나':'?'}</div><div class="cell">?</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="cat" style="left:40px;top:830px">${cat({mood:'normal', size:400})}</div>
+    <div class="bubble left" style="left:470px;top:850px;width:520px;--ty:55%">일간은 사주에서<br>'나 자신'을 뜻해요!</div>
+    <p style="position:absolute;left:470px;right:80px;top:1080px;font-size:32px;line-height:1.5;color:var(--sub);word-break:keep-all">오행 다섯 가지가 각각 둘로 나뉘어<br>모두 10가지 일간이 있어요.</p>
+    ${brand}
+  </div>`,
+  3: () => pairPage('wood'),
+  4: () => pairPage('fire'),
+  5: () => pairPage('earth'),
+  6: () => pairPage('metal'),
+  7: () => pairPage('water'),
+  8: () => `<div class="page">
+    <div class="kicker">마지막으로</div>
+    <div class="title">나는 어떤<br><span class="acc" style="color:var(--gold)">일간일까?</span></div>
+    <div class="cat" style="left:300px;top:420px">${cat({mood:'happy', wave:true, size:480})}</div>
+    <div class="card" style="position:absolute;left:80px;right:80px;top:930px;text-align:center">
+      <p style="font-size:38px;line-height:1.55;word-break:keep-all">생년월일을 넣으면<br>내 일간을 바로 확인할 수 있어요</p>
+      <p style="font-family:Jua;font-size:40px;color:var(--gold);margin-top:16px">프로필 링크 → 천명연구소 사주 보기</p>
+    </div>
+    <p style="position:absolute;left:0;right:0;top:1200px;text-align:center;font-size:32px;color:var(--sub)">내 일간을 댓글로 남겨 주세요 · 친구 일간도 찾아 주기</p>
+    ${brand}
+  </div>`,
+};
+
+const p = +(new URLSearchParams(location.search).get('p') || 1);
+document.getElementById('root').innerHTML = PAGES[p]();
+</script>
+</body>
+</html>
