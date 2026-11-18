@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>명이 오행툰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF4E4; --card:#FFFDF8; --line:#EADFC6;
+    --navy:#1C2B5A; --ink:#3E2F23; --sub:#7A6A58; --gold:#C49A3A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1080px;height:1350px;background:var(--bg);overflow:hidden}
+  body{font-family:'Gowun Dodum',sans-serif;color:var(--ink)}
+  .page{position:relative;width:1080px;height:1350px;padding:96px 80px 0}
+  .kicker{text-align:center;font-family:'Jua';font-size:30px;color:var(--gold);letter-spacing:2px}
+  .title{text-align:center;font-family:'Jua';font-size:72px;line-height:1.2;color:var(--navy);margin-top:14px}
+  .title .acc{color:var(--el,var(--gold))}
+  .brand{position:absolute;left:0;right:0;bottom:44px;text-align:center;font-family:'Jua';font-size:26px;color:var(--sub);opacity:.8}
+  .bubble{position:absolute;background:#fff;border:4px solid var(--navy);border-radius:40px;padding:26px 36px;
+          font-family:'Jua';font-size:40px;line-height:1.35;color:var(--navy);text-align:center}
+  .bubble::after{content:"";position:absolute;width:34px;height:34px;background:#fff;border:4px solid var(--navy);
+          border-top:none;border-left:none;transform:rotate(45deg)}
+  .bubble.down::after{bottom:-21px;left:var(--tx,50%)}
+  .bubble.left::after{left:-21px;top:var(--ty,50%);transform:rotate(135deg)}
+  .cat{position:absolute}
+  .card{background:var(--card);border:3px solid var(--line);border-radius:36px;padding:34px 40px}
+  .chips{display:flex;justify-content:center;gap:22px}
+  .chip{width:132px;height:132px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:'Jua'}
+  .chip b{font-size:58px;font-weight:400;line-height:1}
+  .chip span{font-size:26px;margin-top:4px}
+  .lbl{display:inline-block;font-family:'Jua';font-size:30px;color:#fff;background:var(--el);border-radius:999px;padding:6px 22px}
+  .desc{font-size:36px;line-height:1.55;margin-top:18px;word-break:keep-all}
+  .tips{list-style:none;margin-top:20px}
+  .tips li{display:flex;align-items:center;gap:20px;font-size:35px;line-height:1.4;padding:10px 0;word-break:keep-all}
+  .tips li + li{border-top:2px dashed var(--line)}
+  .num{flex:none;width:54px;height:54px;border-radius:50%;background:var(--el);color:#fff;font-family:'Jua';font-size:32px;display:flex;align-items:center;justify-content:center}
+  .lucky{text-align:center;font-family:'Jua';font-size:32px;color:var(--sub);margin-top:26px}
+  .lucky em{font-style:normal;color:var(--el)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const EL = {
+  wood: {h:'木', k:'목', name:'나무', c:'#4E9A5B'},
+  fire: {h:'火', k:'화', name:'불',   c:'#E0603F'},
+  earth:{h:'土', k:'토', name:'흙',   c:'#B8862F'},
+  metal:{h:'金', k:'금', name:'쇠',   c:'#8C96A3'},
+  water:{h:'水', k:'수', name:'물',   c:'#3567A8'},
+};
+
+/* 명이: 크림색 고양이, 남색 목도리 + 금색 매듭 */
+function cat({mood='normal', prop=null, wave=false, size=420}={}){
+  const O='#5B4330', C='#F7E6C4', P='#F2B8B0', D='#3A2A1E';
+  const eyes = {
+    normal:`<ellipse cx="92" cy="105" rx="7.5" ry="9.5" fill="${D}"/><ellipse cx="148" cy="105" rx="7.5" ry="9.5" fill="${D}"/>
+            <circle cx="94.5" cy="101.5" r="2.6" fill="#fff"/><circle cx="150.5" cy="101.5" r="2.6" fill="#fff"/>`,
+    happy:`<path d="M82 109 Q92 95 102 109" fill="none" stroke="${D}" stroke-width="5" stroke-linecap="round"/>
+           <path d="M138 109 Q148 95 158 109" fill="none" stroke="${D}" stroke-width="5" stroke-linecap="round"/>`,
+    surprised:`<circle cx="92" cy="104" r="11" fill="#fff" stroke="${D}" stroke-width="3.5"/><circle cx="92" cy="105" r="5" fill="${D}"/>
+               <circle cx="148" cy="104" r="11" fill="#fff" stroke="${D}" stroke-width="3.5"/><circle cx="148" cy="105" r="5" fill="${D}"/>`,
+  };
+  eyes.worry = eyes.normal + `<path d="M80 91 L101 84" stroke="${D}" stroke-width="4.5" stroke-linecap="round"/>
+                              <path d="M160 91 L139 84" stroke="${D}" stroke-width="4.5" stroke-linecap="round"/>`;
+  const mouth = {
+    normal:`<path d="M109 122 Q114.5 131 120 122 Q125.5 131 131 122" fill="none" stroke="${D}" stroke-width="3.5" stroke-linecap="round"/>`,
+    happy:`<path d="M107 121 Q120 142 133 121 Z" fill="#B5473F" stroke="${D}" stroke-width="3.5" stroke-linejoin="round"/>`,
+    surprised:`<ellipse cx="120" cy="131" rx="7" ry="9" fill="#B5473F" stroke="${D}" stroke-width="3.5"/>`,
+  };
+  mouth.worry = `<path d="M110 129 Q120 121 130 129" fill="none" stroke="${D}" stroke-width="3.5" stroke-linecap="round"/>`;
+  const props = {
+    wood:`<path d="M196 182 Q194 150 204 122" fill="none" stroke="#3E7A49" stroke-width="5" stroke-linecap="round"/>
+          <ellipse cx="190" cy="140" rx="15" ry="8" fill="#5FB06C" stroke="#3E7A49" stroke-width="3" transform="rotate(-35 190 140)"/>
+          <ellipse cx="214" cy="126" rx="17" ry="9" fill="#5FB06C" stroke="#3E7A49" stroke-width="3" transform="rotate(-20 214 126)"/>`,
+    fire:`<path d="M200 118 C 224 146, 222 176, 200 178 C 178 176, 176 146, 200 118 Z" fill="#F07A3E" stroke="#B9472A" stroke-width="3.5"/>
+          <path d="M200 146 C 210 158, 210 172, 200 172 C 190 172, 190 158, 200 146 Z" fill="#FFD36B"/>`,
+    earth:`<path d="M174 138 L226 138 L218 180 L182 180 Z" fill="#C98A52" stroke="#7E5230" stroke-width="3.5" stroke-linejoin="round"/>
+           <rect x="170" y="130" width="60" height="12" rx="5" fill="#B87943" stroke="#7E5230" stroke-width="3.5"/>
+           <path d="M178 131 Q200 116 222 131 Z" fill="#7A5638"/>`,
+    metal:`<circle cx="200" cy="152" r="20" fill="none" stroke="#C49A3A" stroke-width="8"/>
+           <circle cx="200" cy="152" r="20" fill="none" stroke="#8C6A22" stroke-width="2" opacity=".6"/>
+           <path d="M190 132 L200 120 L210 132 Z" fill="#EEF2F6" stroke="#8C96A3" stroke-width="3" stroke-linejoin="round"/>`,
+    water:`<path d="M200 118 C 222 148, 222 178, 200 180 C 178 178, 178 148, 200 118 Z" fill="#6FA4E0" stroke="#2F5E9A" stroke-width="3.5"/>
+           <ellipse cx="192" cy="160" rx="5" ry="8" fill="#fff" opacity=".7"/>`,
+  };
+  const rightPaw = wave
+    ? `<ellipse cx="190" cy="132" rx="15" ry="13" fill="${C}" stroke="${O}" stroke-width="4"/>`
+    : `<ellipse cx="180" cy="180" rx="15" ry="13" fill="${C}" stroke="${O}" stroke-width="4"/>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <path d="M168 200 C 222 200, 228 150, 200 136" fill="none" stroke="${O}" stroke-width="24" stroke-linecap="round"/>
+    <path d="M168 200 C 222 200, 228 150, 200 136" fill="none" stroke="${C}" stroke-width="15" stroke-linecap="round"/>
+    <ellipse cx="96" cy="226" rx="20" ry="10" fill="${C}" stroke="${O}" stroke-width="4"/>
+    <ellipse cx="144" cy="226" rx="20" ry="10" fill="${C}" stroke="${O}" stroke-width="4"/>
+    <ellipse cx="120" cy="186" rx="62" ry="44" fill="${C}" stroke="${O}" stroke-width="4"/>
+    <path d="M58 76 L48 20 L102 50 Z" fill="${C}" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M182 76 L192 20 L138 50 Z" fill="${C}" stroke="${O}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M63 62 L58 35 L84 50 Z" fill="${P}"/><path d="M177 62 L182 35 L156 50 Z" fill="${P}"/>
+    <ellipse cx="120" cy="104" rx="78" ry="62" fill="${C}" stroke="${O}" stroke-width="4"/>
+    ${eyes[mood]}
+    <ellipse cx="73" cy="124" rx="12" ry="7" fill="${P}" opacity=".8"/>
+    <ellipse cx="167" cy="124" rx="12" ry="7" fill="${P}" opacity=".8"/>
+    <path d="M116 114 L124 114 L120 119 Z" fill="${O}" stroke="${O}" stroke-width="2" stroke-linejoin="round"/>
+    ${mouth[mood]}
+    <path d="M66 152 Q120 182 174 152 L172 168 Q120 196 68 168 Z" fill="#1C2B5A" stroke="#14204A" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M146 176 L140 198 L152 194 Z" fill="#1C2B5A"/><path d="M150 176 L160 196 L166 186 Z" fill="#1C2B5A"/>
+    <circle cx="148" cy="174" r="10" fill="#C49A3A" stroke="#8C6A22" stroke-width="3"/>
+    <ellipse cx="62" cy="186" rx="15" ry="13" fill="${C}" stroke="${O}" stroke-width="4"/>
+    ${prop ? props[prop] : ''}
+    ${rightPaw}
+  </svg>`;
+}
+
+const brand = `<div class="brand">천명연구소 · 재미로 보는 명리 상식</div>`;
+
+function chips(){
+  return `<div class="chips">${Object.values(EL).map(e=>
+    `<div class="chip" style="background:${e.c}"><b>${e.h}</b><span>${e.name}</span></div>`).join('')}</div>`;
+}
+
+const ELPAGE = {
+  wood:{bubble:'시작이 너무<br>어려워요…', mood:'worry',
+        desc:'새로 시작하고 쭉쭉 키워 가는 힘이<br>약하게 느껴질 수 있어요.',
+        tips:['책상에 작은 화분 하나 두기','아침에 20분 걸으며 초록 보기','초록색·나무 소재 소품 쓰기'],
+        color:'초록', dir:'동쪽'},
+  fire:{bubble:'마음은 있는데<br>표현이 안 돼요', mood:'worry',
+        desc:'열정과 표현의 기운이 약해<br>속마음이 잘 전해지지 않을 수 있어요.',
+        tips:['하루 한 번, 먼저 칭찬하기','낮에 햇볕 15분 쬐기','빨강·주황 포인트 아이템 쓰기'],
+        color:'빨강·주황', dir:'남쪽'},
+  earth:{bubble:'이것도 저것도…<br>갈팡질팡해요', mood:'surprised',
+        desc:'중심을 잡고 꾸준히 이어 가는 힘이<br>약하게 느껴질 수 있어요.',
+        tips:['매일 같은 시간에 자고 일어나기','화분 흙 만지기, 산책·등산 하기','베이지·노랑 계열 옷 입기'],
+        color:'노랑·베이지', dir:'중앙'},
+  metal:{bubble:'거절을<br>못 하겠어요…', mood:'worry',
+        desc:'맺고 끊는 결단력이 약해<br>이리저리 끌려다닐 수 있어요.',
+        tips:['할 일마다 마감 시간 정하기','안 쓰는 물건 정리하고 비우기','흰색·은색, 금속 액세서리 하기'],
+        color:'흰색·은색', dir:'서쪽'},
+  water:{bubble:'쉬는 법을<br>모르겠어요', mood:'worry',
+        desc:'유연하게 흘려보내고 쉬어 가는 힘이<br>약할 수 있어요.',
+        tips:['물을 자주 마시기','자기 전 일기로 생각 정리하기','검정·남색 아이템, 물가 산책'],
+        color:'검정·남색', dir:'북쪽'},
+};
+
+function elementPage(key){
+  const e = EL[key], d = ELPAGE[key];
+  return `<div class="page" style="--el:${e.c}">
+    <div class="kicker">없는 오행 채우기</div>
+    <div class="title"><span class="acc">${e.h}(${e.k})</span>이 없다면</div>
+    <div class="cat" style="left:70px;top:265px">${cat({mood:d.mood, prop:key, size:370})}</div>
+    <div class="bubble left" style="left:480px;top:320px;width:510px;--ty:60%">${d.bubble}</div>
+    <div style="position:absolute;left:80px;right:80px;top:650px;display:flex;flex-direction:column;gap:22px">
+      <div class="card" style="padding-top:28px;padding-bottom:28px">
+        <span class="lbl">이럴 수 있어요</span>
+        <p class="desc">${d.desc}</p>
+      </div>
+      <div class="card" style="padding-top:28px;padding-bottom:14px">
+        <span class="lbl">이렇게 채워요</span>
+        <ul class="tips">${d.tips.map((t,i)=>`<li><span class="num">${i+1}</span>${t}</li>`).join('')}</ul>
+      </div>
+    </div>
+    ${brand}
+  </div>`;
+}
+
+const PAGES = {
+  1: () => `<div class="page">
+    <div class="kicker">명이의 명리 생활</div>
+    <div class="title" style="font-size:96px;margin-top:30px">사주에 없는 오행,<br><span class="acc" style="color:var(--gold)">이렇게 채워요</span></div>
+    <p style="text-align:center;font-size:38px;color:var(--sub);margin-top:30px">부족한 기운, 생활 속에서 채우는 법</p>
+    <div style="margin-top:56px">${chips()}</div>
+    <div class="bubble down" style="left:560px;top:760px;width:420px;--tx:22%">내 사주에<br>水가 없다고?!</div>
+    <div class="cat" style="left:130px;top:770px">${cat({mood:'surprised', size:450})}</div>
+    ${brand}
+  </div>`,
+  2: () => `<div class="page">
+    <div class="kicker">먼저 알아 두기</div>
+    <div class="title">오행이 뭐냐면요</div>
+    <div class="card" style="margin-top:50px;text-align:center">
+      <p style="font-size:38px;line-height:1.5;margin-bottom:30px">사주 여덟 글자는 다섯 가지 기운,<br><b style="font-family:Jua;font-weight:400;color:var(--navy)">오행</b>으로 이루어져 있어요.</p>
+      ${chips()}
+    </div>
+    <div class="cat" style="left:40px;top:770px">${cat({mood:'normal', size:430})}</div>
+    <div class="bubble left" style="left:490px;top:780px;width:500px;--ty:55%">그런데 이 중 하나가<br>아예 없을 수도<br>있대요!</div>
+    <div class="card" style="position:absolute;left:470px;right:80px;top:1060px;padding:26px 32px">
+      <p style="font-size:32px;line-height:1.5;word-break:keep-all">없다고 나쁜 건 아니에요.<br>생활 속 색과 습관으로<br>살짝 채워 주면 돼요.</p>
+    </div>
+    ${brand}
+  </div>`,
+  3: () => elementPage('wood'),
+  4: () => elementPage('fire'),
+  5: () => elementPage('earth'),
+  6: () => elementPage('metal'),
+  7: () => elementPage('water'),
+  8: () => `<div class="page">
+    <div class="kicker">마지막으로</div>
+    <div class="title">내 사주엔<br><span class="acc" style="color:var(--gold)">뭐가 없을까?</span></div>
+    <div class="cat" style="left:300px;top:420px">${cat({mood:'happy', wave:true, size:480})}</div>
+    <div class="card" style="position:absolute;left:80px;right:80px;top:930px;text-align:center">
+      <p style="font-size:38px;line-height:1.55;word-break:keep-all">생년월일만 넣으면<br>내 오행 분포를 <b style="font-family:Jua;font-weight:400;color:var(--navy)">무료로</b> 볼 수 있어요</p>
+      <p style="font-family:Jua;font-size:40px;color:var(--gold);margin-top:16px">프로필 링크 → 천명연구소 사주 보기</p>
+    </div>
+    <p style="position:absolute;left:0;right:0;top:1200px;text-align:center;font-size:32px;color:var(--sub)">저장해 두고 하나씩 해 봐요 · 없는 오행을 댓글로 알려 주세요</p>
+    ${brand}
+  </div>`,
+};
+
+const p = +(new URLSearchParams(location.search).get('p') || 1);
+document.getElementById('root').innerHTML = PAGES[p]();
+</script>
+</body>
+</html>
